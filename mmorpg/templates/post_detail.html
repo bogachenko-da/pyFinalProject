@@ -1,0 +1,16 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Объявление
+{% endblock title %}
+
+{% block content %}
+    <h2>{{ post_detail.title }}</h2>
+    <hr>
+    <h6>Дата публикации: {{ post_detail.created_at|date:'d.m.Y' }}</h6>
+    <hr>
+    {{ post_detail.text}}
+    <hr>
+    <button> <a href="{% url 'post_edit' post_detail.id %}">Редактировать</a> </button>
+    <button> <a href="{% url 'post_delete' post_detail.id %}">Удалить</a> </button>
+{% endblock content %}
