@@ -11,6 +11,8 @@
     <hr>
     {{ post_detail.text}}
     <hr>
+    {% if user.is_authenticated %}
     <button> <a href="{% url 'post_edit' post_detail.id %}">Редактировать</a> </button>
     <button> <a href="{% url 'post_delete' post_detail.id %}">Удалить</a> </button>
+    {% endif %}
 {% endblock content %}

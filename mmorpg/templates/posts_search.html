@@ -30,10 +30,12 @@
             <td>{{ post.created_at|date:'d.m.Y' }}</td>
             <td>{{ post.text|truncatechars:20 }}</td>
             <td>{{ post.user.username }}</td>
+            {% if user.is_authenticated %}
             <td>
                 <a href="{% url 'post_edit' post.id %}">Редактировать</a>
                 <a href="{% url 'post_delete' post.id %}">Удалить</a>
             </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>
