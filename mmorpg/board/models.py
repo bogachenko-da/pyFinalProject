@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.urls import reverse
 
 tanks = 'TNK'
@@ -29,10 +29,11 @@ CATEGORY = [
 
 
 class Post(models.Model):
+    CATEGORY = CATEGORY
     title = models.CharField(max_length=255)
-    text = RichTextField()
+    text = RichTextUploadingField()
     created_at = models.DateTimeField(auto_now_add=True)
-    category = models.CharField(max_length=3, choices=CATEGORY, )
+    category = models.CharField(max_length=3, choices=CATEGORY)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -40,8 +41,6 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.id)])
-
-    CATEGORY = CATEGORY
 
 
 class Reaction(models.Model):

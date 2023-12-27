@@ -9,7 +9,7 @@
     <hr>
     <h6>Дата публикации: {{ post_detail.created_at|date:'d.m.Y' }}</h6>
     <hr>
-    {{ post_detail.text}}
+    {{ post_detail.text|safe }}
     <hr>
     {% if user.is_authenticated %}
     <button> <a href="{% url 'post_edit' post_detail.id %}">Редактировать</a> </button>

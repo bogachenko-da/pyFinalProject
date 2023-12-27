@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .filters import PostFilter
 from .forms import PostForm
@@ -13,6 +13,7 @@ class PostsList(ListView):
     ordering = '-created_at'
     template_name = 'posts_list.html'
     context_object_name = 'posts_list'
+    paginate_by = 10
 
 
 class PostDetail(DetailView):
@@ -44,14 +45,26 @@ class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     template_name = 'post_edit.html'
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
-class PostUpdate(LoginRequiredMixin, UpdateView):
+
+class PostUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
 
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.user
 
-class PostDelete(LoginRequiredMixin, DeleteView):
+
+class PostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('posts_list')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.user
