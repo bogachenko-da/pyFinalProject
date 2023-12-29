@@ -15,7 +15,7 @@
         {{ filterset.form.as_p }}
         <input type="submit" value="Найти">
     </form>
-    <table>
+    <table class="table table-bordered">
         <tr>
             <td>Заголовок</td>
             <td>Дата публикации</td>
@@ -27,7 +27,7 @@
             <td>
                 <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
             </td>
-            <td>{{ post.created_at|date:'d.m.Y' }}</td>
+            <td>{{ post.created_at|date:'d.m.Y H:m:s' }}</td>
             <td>{{ post.text|truncatechars:20 }}</td>
             <td>{{ post.user.username }}</td>
             {% if user.is_authenticated %}

@@ -11,22 +11,25 @@
     <hr>
     {% if user.is_authenticated %}
     <a href="{% url 'post_create' %}">Создать объявление</a>
+    <hr>
     {% endif %}
     {% if posts_list %}
-        <table>
+        <table class="table table-bordered">
             <tr>
                 <td>Заголовок</td>
                 <td>Дата публикации</td>
                 <td>Текст</td>
-                <td>Пользователь</td>
+                <td>Категория</td>
+                <td>Автор</td>
             </tr>
             {% for post in posts_list %}
             <tr>
                 <td>
                     <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
                 </td>
-                <td>{{ post.created_at|date:'d.m.Y' }}</td>
+                <td>{{ post.created_at|date:'d.m.Y H:m:s' }}</td>
                 <td>{{ post.text|truncatechars:20 }}</td>
+                <td>{{ post.category }}</td>
                 <td>{{ post.user.username }}</td>
                 {% if user.is_authenticated %}
                 <td>

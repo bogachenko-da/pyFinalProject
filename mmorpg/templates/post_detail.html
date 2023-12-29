@@ -12,7 +12,17 @@
     {{ post_detail.text|safe }}
     <hr>
     {% if user.is_authenticated %}
-    <button> <a href="{% url 'post_edit' post_detail.id %}">Редактировать</a> </button>
-    <button> <a href="{% url 'post_delete' post_detail.id %}">Удалить</a> </button>
+        <button> <a href="{% url 'reaction_create' post_detail.id %}">Создать отклик</a> </button>
+        <button> <a href="{% url 'post_edit' post_detail.id %}">Редактировать</a> </button>
+        <button> <a href="{% url 'post_delete' post_detail.id %}">Удалить</a> </button>
+    {% endif %}
+    <hr>
+    {% if reactions %}
+        <h3>Отклики:</h3>
+        {% for reaction in reactions %}
+            <p>{{ reaction.user.username }} ({{ reaction.created_at|date:'d.m.Y H:i:s' }}) - {{ reaction.text }}</p>
+        {% endfor %}
+    {% else %}
+        <h3>Откликов нет!</h3>
     {% endif %}
 {% endblock content %}

@@ -1,0 +1,35 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Мои объявления
+{% endblock title %}
+
+{% block content %}
+    <h2 style="text-align: center;">Мои Объявления</h2>
+    <hr>
+    <h6>Количество: {{ posts|length }}</h6>
+    {% if posts %}
+    <table class="table table-bordered">
+        <tr>
+            <td>Заголовок</td>
+            <td>Дата создания</td>
+            <td>Категория</td>
+            <td>Автор</td>
+        </tr>
+        {% for post in posts %}
+        <tr>
+            <td>
+                <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
+            </td>
+            <td>{{ post.created_at|date:'d.m.Y H:m:s' }}</td>
+            <td>{{ post.category }}</td>
+            <td>{{ post.user }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h2>У вас нет объявлений.</h2>
+    {% endif %}
+    <br>
+    <a href="{% url 'post_create' %}">Создать объявление</a>
+{% endblock content %}

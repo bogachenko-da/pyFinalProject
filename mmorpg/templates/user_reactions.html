@@ -1,0 +1,39 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Мои отклики
+{% endblock title %}
+
+{% block content %}
+    <h2 style="text-align: center;">Мои отклики</h2>
+    <hr>
+    <h6>Количество: {{ reactions|length }}</h6>
+    {% if reactions %}
+    <table class="table table-bordered">
+        <tr>
+            <td>Объявление</td>
+            <td>Текст отклика</td>
+            <td>Дата создания отклика</td>
+            <td>Статус</td>
+        </tr>
+        {% for reaction in reactions %}
+        <tr>
+            <td>
+                <a href="{% url 'post_detail' reaction.post.id %}">{{ reaction.post }}</a>
+            </td>
+            <td>{{ reaction.text }}</td>
+            <td>{{ reaction.created_at|date:'d.m.Y H:m:s' }}</td>
+            <td>
+                {% if reaction.accepted %}
+                    Принят
+                {% else %}
+                    Не принят
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h2>У вас нет откликов!</h2>
+    {% endif %}
+{% endblock content %}

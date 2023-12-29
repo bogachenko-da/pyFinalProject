@@ -1,0 +1,53 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Отклики на мои объявления
+{% endblock title %}
+
+{% block content %}
+    <h2 style="text-align: center;">Отклики на мои объявления</h2>
+    <form method="get">
+        <select name="post">
+            <option value="">Все объявления</option>
+            {% for post in posts %}
+                <option value="{{ post.pk }}" {% if selected_post_id == post.pk %}selected{% endif %}>{{ post.title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Фильтр</button>
+    </form>
+    <hr>
+    {% if reactions %}
+    <table class="table table-bordered">
+        <tr>
+            <td>Объявление</td>
+            <td>Текст отклика</td>
+            <td>Дата создания отклика</td>
+            <td>Автор отклика</td>
+            <td>Принять</td>
+            <td>Удалить</td>
+        </tr>
+        {% for reaction in reactions %}
+        <tr>
+            <td>
+                <a href="{% url 'post_detail' reaction.post.id %}">{{ reaction.post }}</a>
+            </td>
+            <td>{{ reaction.text }}</td>
+            <td>{{ reaction.created_at|date:'d.m.Y H:m:s' }}</td>
+            <td>{{ reaction.user }}</td>
+            <td>
+                {% if reaction.accepted %}
+                    <a href="{% url 'reaction_reject' reaction.id %}">Отклонить</a>
+                {% else %}
+                    <a href="{% url 'reaction_accept' reaction.id %}">Принять</a>
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'reaction_delete' reaction.id %}">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h2>У вас нет откликов</h2>
+    {% endif %}
+{% endblock content %}
