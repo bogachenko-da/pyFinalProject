@@ -21,6 +21,8 @@
                 <td>Текст</td>
                 <td>Категория</td>
                 <td>Автор</td>
+                <td>Редактировать</td>
+                <td>Удалить</td>
             </tr>
             {% for post in posts_list %}
             <tr>
@@ -34,6 +36,8 @@
                 {% if user.is_authenticated %}
                 <td>
                     <a href="{% url 'post_edit' post.id %}">Редактировать</a>
+                </td>
+                <td>
                     <a href="{% url 'post_delete' post.id %}">Удалить</a>
                 </td>
                 {% endif %}

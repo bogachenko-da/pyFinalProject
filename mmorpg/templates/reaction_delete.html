@@ -5,7 +5,7 @@
     <hr>
     <form action="" method="post">
         {% csrf_token %}
-        <p>Вы действительно хотите удалить отклик "{{ reply }}" от пользователя "{{ reply.user }}"?</p>
+        <p>Вы действительно хотите удалить отклик "{{ reaction }}" от пользователя "{{ reaction.user }}"?</p>
         <input type="submit" value="Delete" />
     </form>
 {% endblock content %}

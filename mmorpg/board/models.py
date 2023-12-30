@@ -1,7 +1,10 @@
+from django.core.mail import send_mail
 from django.db import models
 from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.urls import reverse
+from django.conf import settings
+
 
 tanks = 'TNK'
 hils = 'HIL'
@@ -52,3 +55,27 @@ class Reaction(models.Model):
 
     def __str__(self):
         return self.text
+
+    def send_notification_email(self):
+        subject = 'Отклик на ваше объявление'
+        message = f'Здравствуйте!\n\nНа ваше объявление "{self.post}" появился новый отклик.\n\nС уважением сайт MMORPG.'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [self.post.user.email]
+
+        send_mail(subject, message, from_email, recipient_list)
+
+    def send_accepted_email(self):
+        subject = 'Ваш отклик принят'
+        message = f'Здравствуйте!\n\nВаш отклик "{self.text[:15]}" принят.\n\nС уважением,\nВаш сайт MMORPG.'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [self.user.email]
+
+        send_mail(subject, message, from_email, recipient_list)
+
+    def send_reject_email(self):
+        subject = 'Ваш отклик отклонен'
+        message = f'Здравствуйте!\n\nВаш отклик "{self.text[:15]}" отклонен.\n\nС уважением,\nВаш сайт MMORPG.'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [self.user.email]
+
+        send_mail(subject, message, from_email, recipient_list)

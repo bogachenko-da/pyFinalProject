@@ -51,7 +51,7 @@ class PostsSearchList(ListView):
 class PostCreate(LoginRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
-    template_name = 'post_edit.html'
+    template_name = 'post_create.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -88,10 +88,23 @@ class ReactionCreate(LoginRequiredMixin, CreateView):
         post = get_object_or_404(Post, pk=post_id)
         form.instance.post = post
         form.instance.user = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        self.object.send_notification_email()
+        return response
 
     def get_success_url(self):
         return reverse_lazy('post_detail', args=[str(self.kwargs['pk'])])
+
+
+class ReactionUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    form_class = ReactionForm
+    model = Reaction
+    template_name = 'reaction_edit.html'
+    success_url = reverse_lazy('user_reactions')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.user
 
 
 class ReactionDelete(LoginRequiredMixin, DeleteView):
@@ -120,6 +133,7 @@ def user_posts_reactions(request):
     posts = Post.objects.filter(user=current_user).order_by('-created_at')
     selected_post_id = request.GET.get('post')
 
+
     reactions = Reaction.objects.filter(post__user=current_user).order_by('-created_at')
     if selected_post_id:
         reactions = reactions.filter(post__id=selected_post_id)
@@ -139,7 +153,8 @@ def reaction_accept(request, pk):
     reply = get_object_or_404(Reaction, pk=pk)
     reply.accepted = True
     reply.save()
-    return HttpResponseRedirect(reverse('user_reactions'))
+    reply.send_accepted_email()
+    return HttpResponseRedirect(reverse('user_posts_reactions'))
 
 
 @login_required
@@ -147,4 +162,5 @@ def reaction_reject(request, pk):
     reply = get_object_or_404(Reaction, pk=pk)
     reply.accepted = False
     reply.save()
-    return HttpResponseRedirect(reverse('user_reactions'))
+    reply.send_reject_email()
+    return HttpResponseRedirect(reverse('user_posts_reactions'))
