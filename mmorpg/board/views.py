@@ -89,7 +89,6 @@ class ReactionCreate(LoginRequiredMixin, CreateView):
         form.instance.post = post
         form.instance.user = self.request.user
         response = super().form_valid(form)
-        self.object.send_notification_email()
         return response
 
     def get_success_url(self):
@@ -132,8 +131,6 @@ def user_posts_reactions(request):
     current_user = request.user
     posts = Post.objects.filter(user=current_user).order_by('-created_at')
     selected_post_id = request.GET.get('post')
-
-
     reactions = Reaction.objects.filter(post__user=current_user).order_by('-created_at')
     if selected_post_id:
         reactions = reactions.filter(post__id=selected_post_id)
@@ -150,17 +147,15 @@ def user_posts_reactions(request):
 
 @login_required
 def reaction_accept(request, pk):
-    reply = get_object_or_404(Reaction, pk=pk)
-    reply.accepted = True
-    reply.save()
-    reply.send_accepted_email()
+    reaction = get_object_or_404(Reaction, pk=pk)
+    reaction.accepted = True
+    reaction.save()
     return HttpResponseRedirect(reverse('user_posts_reactions'))
 
 
 @login_required
 def reaction_reject(request, pk):
-    reply = get_object_or_404(Reaction, pk=pk)
-    reply.accepted = False
-    reply.save()
-    reply.send_reject_email()
+    reaction = get_object_or_404(Reaction, pk=pk)
+    reaction.accepted = False
+    reaction.save()
     return HttpResponseRedirect(reverse('user_posts_reactions'))
