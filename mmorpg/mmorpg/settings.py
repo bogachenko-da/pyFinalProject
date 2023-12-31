@@ -44,16 +44,20 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'board',
+    # 'board',
+    'board.apps.BoardConfig',
     'ckeditor',
     'ckeditor_uploader',
     'django_filters',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'django_apscheduler',
 ]
 
 SITE_ID = 1
+
+SITE_URL = 'http://127.0.0.1:8000'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -241,3 +245,6 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
